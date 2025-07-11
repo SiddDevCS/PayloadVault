@@ -7,15 +7,10 @@
 <body>
   <div class="terminal-header">
     <div class="terminal-controls">
-      <span class="control red"></span>
-      <span class="control yellow"></span>
-      <span class="control green"></span>
+      <span class="control red" id="close-btn"></span>
     </div>
     <h2>PAYLOAD VAULT</h2>
-    <div class="status-line">
-      <span class="status">STATUS: ONLINE</span>
-      <span class="timestamp" id="timestamp"></span>
-    </div>
+    <div class="timestamp" id="timestamp"></div>
   </div>
 
   <div id="add-section">
@@ -40,7 +35,7 @@
     </select>
     <input type="text" id="payload-tags" placeholder="Tags (comma separated, e.g. mysql, union, blind)" />
     <textarea id="payload-content" placeholder="Paste your payload here..."></textarea>
-    <button id="add-btn">[ EXECUTE ] ADD PAYLOAD</button>
+    <button id="add-btn">EXECUTE ADD PAYLOAD</button>
   </div>
 
   <div class="payloads-container">
@@ -75,6 +70,9 @@
           <option value="date">Sort by Date</option>
         </select>
       </div>
+      <div class="action-controls">
+        <button id="delete-all-btn" class="delete-all-btn">DELETE ALL PAYLOADS</button>
+      </div>
     </div>
 
     <div id="payloads"></div>
@@ -82,7 +80,7 @@
 
   <div class="footer">
     <div class="system-info">
-      <span>SYSTEM: CHROME EXTENSION</span>
+      <span>Made by: <a href="https://github.com/SiddDevCS" target="_blank">Sidd Sehgal</a></span>
       <span>VERSION: 1.0</span>
     </div>
   </div>
