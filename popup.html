@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Payload Vault</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="terminal-header">
+    <div class="terminal-controls">
+      <span class="control red"></span>
+      <span class="control yellow"></span>
+      <span class="control green"></span>
+    </div>
+    <h2>PAYLOAD VAULT</h2>
+    <div class="status-line">
+      <span class="status">STATUS: ONLINE</span>
+      <span class="timestamp" id="timestamp"></span>
+    </div>
+  </div>
+
+  <div id="add-section">
+    <div class="section-header">
+      <span class="prompt">$</span> ADD NEW PAYLOAD
+    </div>
+    <input type="text" id="payload-name" placeholder="Payload Name (e.g. SQL Injection)" />
+    <select id="payload-category">
+      <option value="">Select Category</option>
+      <option value="sql">SQL Injection</option>
+      <option value="xss">XSS (Cross-Site Scripting)</option>
+      <option value="rce">RCE (Remote Code Execution)</option>
+      <option value="reverse-shell">Reverse Shell</option>
+      <option value="lfi">LFI/RFI (File Inclusion)</option>
+      <option value="ssrf">SSRF (Server-Side Request Forgery)</option>
+      <option value="xxe">XXE (XML External Entity)</option>
+      <option value="deserialization">Deserialization</option>
+      <option value="authentication">Authentication Bypass</option>
+      <option value="authorization">Authorization Bypass</option>
+      <option value="command">Command Injection</option>
+      <option value="other">Other</option>
+    </select>
+    <input type="text" id="payload-tags" placeholder="Tags (comma separated, e.g. mysql, union, blind)" />
+    <textarea id="payload-content" placeholder="Paste your payload here..."></textarea>
+    <button id="add-btn">[ EXECUTE ] ADD PAYLOAD</button>
+  </div>
+
+  <div class="payloads-container">
+    <div class="section-header">
+      <span class="prompt">$</span> STORED PAYLOADS
+    </div>
+    
+    <!-- Organization Controls -->
+    <div class="organization-controls">
+      <div class="search-box">
+        <input type="text" id="search-input" placeholder="Search payloads..." />
+      </div>
+      <div class="filter-controls">
+        <select id="category-filter">
+          <option value="">All Categories</option>
+          <option value="sql">SQL Injection</option>
+          <option value="xss">XSS</option>
+          <option value="rce">RCE</option>
+          <option value="reverse-shell">Reverse Shell</option>
+          <option value="lfi">LFI/RFI</option>
+          <option value="ssrf">SSRF</option>
+          <option value="xxe">XXE</option>
+          <option value="deserialization">Deserialization</option>
+          <option value="authentication">Authentication</option>
+          <option value="authorization">Authorization</option>
+          <option value="command">Command Injection</option>
+          <option value="other">Other</option>
+        </select>
+        <select id="sort-by">
+          <option value="name">Sort by Name</option>
+          <option value="category">Sort by Category</option>
+          <option value="date">Sort by Date</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="payloads"></div>
+  </div>
+
+  <div class="footer">
+    <div class="system-info">
+      <span>SYSTEM: CHROME EXTENSION</span>
+      <span>VERSION: 1.0</span>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
